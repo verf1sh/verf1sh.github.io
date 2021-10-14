@@ -190,6 +190,50 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/10/14/%E5%BC%BA%E7%BD%91%E6%9D%AF%E5%9B%A2%E9%98%9F%E8%B5%9BPWN/" target="_self">
+          广东省强网杯团队赛PWN方向题解
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/14/%E5%BC%BA%E7%BD%91%E6%9D%AF%E5%9B%A2%E9%98%9F%E8%B5%9BPWN/" target="_self">
+          
+          
+            
+          
+          比赛只出了一道pwn，摸了。题目链接，提取码：hi98
+GirlFriend程序分析ida打开文件后发现函数体内啥也没有。
+
+汇编中有call $+5这样一条指令，类似于重定位，这对我们来说肯定是干扰，我们需要patch修复一下。
+
+修复方法参考如下
+
+就是把call $+5全都改成jmp 【下条指令地址加上其偏移】，修复后就可以看见函数代码了，程序中有很多需要修复的地方，同样的方法改一下就好。
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-14 14:29" pubdate>
+              2021-10-14
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/10/10/hello-world/" target="_self">
           Hello World
         </a>
