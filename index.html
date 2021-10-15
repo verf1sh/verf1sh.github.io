@@ -190,6 +190,65 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/10/15/%E8%83%BD%E6%BA%90%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9Bpwn%E6%96%B9%E5%90%91%E9%A2%98%E8%A7%A3/" target="_self">
+          能源网络安全大赛pwn方向题解
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/15/%E8%83%BD%E6%BA%90%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9Bpwn%E6%96%B9%E5%90%91%E9%A2%98%E8%A7%A3/" target="_self">
+          
+          
+            
+          
+          
+先简单记录一下，明天还有bytectf，有时间了再好好复盘一下，arm pwn都没时间看。
+babyshellcode侥幸一血
+程序分析程序逻辑很简单，考点也清晰，就是orw然后侧信道爆破flag。没见过这种就很难想到，今年的蓝帽杯，强网杯都出过这个考点。有个注意的点就是这个read限制了大小，得绕一下。
+
+利用思路先写一段shellcode，read更多的字节，这样就可以把我们所有orw的sh
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-15 21:27" pubdate>
+              2021-10-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/PWN/">PWN</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/orw/">orw</a>
+            
+              <a href="/tags/Tcache-Stashing-Unlink-Attack/">Tcache Stashing Unlink Attack</a>
+            
+              <a href="/tags/tcache-struct%E5%8A%AB%E6%8C%81/">tcache struct劫持</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/10/14/%E5%BC%BA%E7%BD%91%E6%9D%AF%E5%9B%A2%E9%98%9F%E8%B5%9BPWN/" target="_self">
           广东省强网杯团队赛PWN方向题解
         </a>
@@ -223,6 +282,20 @@ GirlFriend程序分析ida打开文件后发现函数体内啥也没有。
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/PWN/">PWN</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/off-by-null/">off by null</a>
+            
+          </div>
         
       </div>
     </article>
