@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/10/22/YB4ZPL6srGtEV7D.png">
 <meta property="og:image" content="https://i.loli.net/2021/10/22/RdyS3KlrM6QmoGE.png">
 <meta property="article:published_time" content="2021-10-22T04:57:37.000Z">
-<meta property="article:modified_time" content="2021-10-22T15:05:07.157Z">
+<meta property="article:modified_time" content="2021-10-22T16:04:13.929Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/10/22/rudK3BiUF9lAjeq.png">
@@ -210,7 +210,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      10k 字
+      11k 字
     </span>
   
 
@@ -377,7 +377,7 @@
 <li>modprobe_path</li>
 </ul>
 <h4 id="KPTI"><a href="#KPTI" class="headerlink" title="KPTI"></a>KPTI</h4><p>KPTI即<code>内核页表隔离</code>（Kernel page-table isolation）,内核空间与用户空间分别使用两组不同的页表集，这对于内核的内存管理产生了根本性的变化</p>
-<p><img src="https://i.loli.net/2021/10/22/8mokKdw7JE1YCHt.png" srcset="/img/loading.gif" lazyload alt="image-20211022144411995"></p>
+<p><img src="https://i.loli.net/2021/10/22/8mokKdw7JE1YCHt.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>这里全程以<a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/kernel/CISCN2017-babydriver">CISCN2017 - babydriver</a>的环境搭建作为演示</p>
 <h3 id="一、编译内核"><a href="#一、编译内核" class="headerlink" title="一、编译内核"></a>一、编译内核</h3><p>首先到linux内核的<a target="_blank" rel="noopener" href="https://www.kernel.org/">官网</a>下载一份内核源代码并解压:</p>
 <p><img src="https://i.loli.net/2021/10/22/IJEA2BLK3slYPet.png" srcset="/img/loading.gif" lazyload></p>
@@ -416,7 +416,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">make install<br></code></pre></td></tr></table></figure>
 
 <p>编译完make install后，在busybox源代码的根目录下会有一个 _install目录下会存放好编译后的文件</p>
-<p><img src="https://i.loli.net/2021/10/22/YB4ZPL6srGtEV7D.png" srcset="/img/loading.gif" lazyload alt="image-20211022211739363"></p>
+<p><img src="https://i.loli.net/2021/10/22/YB4ZPL6srGtEV7D.png" srcset="/img/loading.gif" lazyload></p>
 <p>接下来一些初始化操作</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs she">cd _install<br>mkdir -pv &#123;bin,etc/init.d,sbin,etc,proc,sys,home,lib64,lib/x86_64-linux-gnu,usr/&#123;bin,sbin&#125;&#125; <br>touch etc/init.d/rcS<br>chmod +x ./etc/init.d/rcS<br></code></pre></td></tr></table></figure>
 
@@ -475,6 +475,7 @@
 <h3 id="gdb调试"><a href="#gdb调试" class="headerlink" title="gdb调试"></a>gdb调试</h3><p>附上gdb调试脚本</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br>gdb -q \<br>	-ex <span class="hljs-string">&quot;file vmlinux&quot;</span>\<br>	-ex <span class="hljs-string">&quot;add-symbol-file babydriver.ko 0xffffffffc0000000&quot;</span>\ <span class="hljs-comment">#指定驱动代码段加载基址</span><br>	-ex <span class="hljs-string">&quot;target remote localhost:1234&quot;</span><br>	-ex <span class="hljs-string">&quot;b babyopen&quot;</span><br></code></pre></td></tr></table></figure>
 
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><p><a target="_blank" rel="noopener" href="https://arttnba3.cn/2021/02/21/NOTE-0X02-LINUX-KERNEL-PWN-PART-I/">https://arttnba3.cn/2021/02/21/NOTE-0X02-LINUX-KERNEL-PWN-PART-I/</a></p>
 
             </div>
             <hr>
