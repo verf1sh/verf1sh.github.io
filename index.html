@@ -190,6 +190,185 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/11/26/ciscn-2017-babydriver%E7%9A%84%E5%87%A0%E7%A7%8D%E8%A7%A3%E6%B3%95/" target="_self">
+          ciscn_2017_babydriver的几种解法
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/11/26/ciscn-2017-babydriver%E7%9A%84%E5%87%A0%E7%A7%8D%E8%A7%A3%E6%B3%95/" target="_self">
+          
+          
+            
+          
+          开始之前最近在屁颠屁颠的学kernel pwn，跟着一些视频、博客搭建环境，学习调试内核。但感觉内核态的漏洞涉及了很多知识点，只能遇到啥去学啥了。
+因此为了巩固每次新学习的知识点，我打算整理好记下来，同时录个视频加强自己的思维理解，当然如果能帮助到其他正在学习的小伙伴那就更好了。
+驱动分析ida打开驱动一看，有如下几个功能函数，其中babydriver_init和babydriver_exit函数
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-26 13:52" pubdate>
+              2021-11-26
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/kernel-pwn/">kernel pwn</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/11/23/AFL-%E6%8C%96%E6%8E%98ImageMagick/" target="_self">
+          AFL++ 挖掘ImageMagick
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/11/23/AFL-%E6%8C%96%E6%8E%98ImageMagick/" target="_self">
+          
+          
+            
+          
+          安装AFL++方便起见，直接用官方提供的docker镜像，两条命令即可，docker使用的是ubuntu20的版本
+12docker pull aflplusplus/aflplusplusdocker run -ti -v /location/of/your/target:/src aflplusplus/aflplusplus
+
+我这里使用的是：
+1docker run -ti --privi
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-23 13:08" pubdate>
+              2021-11-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Fuzz/">Fuzz</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/fuzz/">fuzz</a>
+            
+              <a href="/tags/AFL/">AFL++</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/11/21/C++%20PWN/" target="_self">
+          C++ PWN
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/11/21/C++%20PWN/" target="_self">
+          
+          
+            
+          
+          最近看了几道C++的pwn题，头都大了，太难逆向了，所以想学习一下C++的一些知识。以下主要以搬运为主
+C++基础知识从C到C++封装、继承、多态是C++耳熟能详的几个特点。
+C++的封装可以理解成C语言中把函数定义在结构体内部。如下面的代码，在C语言中Test是个结构体类型，在C++中就叫成Test类了，test就叫做对象，定义在这个结构体里面的都叫做成员，写在结构体里面的函数就叫做成员函数
+1
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-21 19:55" pubdate>
+              2021-11-21
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/11/08/tips/" target="_self">
+          tips
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/11/08/tips/" target="_self">
+          
+          
+            
+          
+          zsh终端出现问题zsh: corrupt history file /home/xxx/.zsh_history
+123mv ~/.zsh_history ~/.zsh_history_badstrings ~/.zsh_history_bad &gt; ~/.zsh_historyfc -R ~.zsh_history
+
+虚拟机挂起后无法联网sudo service network-manag
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-08 14:36" pubdate>
+              2021-11-08
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/11/04/pwn%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE/" target="_self">
           pwn虚拟机配置
         </a>

