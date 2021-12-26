@@ -16,16 +16,22 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <meta name="description" content="zsh终端出现问题zsh: corrupt history file &#x2F;home&#x2F;xxx&#x2F;.zsh_history 123mv ~&#x2F;.zsh_history ~&#x2F;.zsh_history_badstrings ~&#x2F;.zsh_history_bad &gt; ~&#x2F;.zsh_historyfc -R ~.zsh_history  虚拟机挂起后无法联网sudo service network-manag">
+  <meta name="description" content="随缘记录一些日常碰到的问题 zsh终端出现问题zsh: corrupt history file &#x2F;home&#x2F;xxx&#x2F;.zsh_history 123mv ~&#x2F;.zsh_history ~&#x2F;.zsh_history_badstrings ~&#x2F;.zsh_history_bad &gt; ~&#x2F;.zsh_historyfc -R ~.zsh_history  虚拟机挂起后无法联网sudo service">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tips">
-<meta property="og:url" content="http://example.com/2021/11/08/tips/index.html">
+<meta property="og:url" content="http://example.com/2021/11/08/%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/index.html">
 <meta property="og:site_name" content="verf1sh&#39;blog">
-<meta property="og:description" content="zsh终端出现问题zsh: corrupt history file &#x2F;home&#x2F;xxx&#x2F;.zsh_history 123mv ~&#x2F;.zsh_history ~&#x2F;.zsh_history_badstrings ~&#x2F;.zsh_history_bad &gt; ~&#x2F;.zsh_historyfc -R ~.zsh_history  虚拟机挂起后无法联网sudo service network-manag">
+<meta property="og:description" content="随缘记录一些日常碰到的问题 zsh终端出现问题zsh: corrupt history file &#x2F;home&#x2F;xxx&#x2F;.zsh_history 123mv ~&#x2F;.zsh_history ~&#x2F;.zsh_history_badstrings ~&#x2F;.zsh_history_bad &gt; ~&#x2F;.zsh_historyfc -R ~.zsh_history  虚拟机挂起后无法联网sudo service">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/11/26/SLWzg1wb35iJUIP.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/30/lXWjsBZoUkMrVGq.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/30/hvl1gk6wAJEic3j.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/30/JZvXoPfYhiVBqTt.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/30/5ngTopFCV2A9cNr.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/30/vzKPDFm6LGYh2XZ.png">
+<meta property="og:image" content="https://i.loli.net/2021/11/30/i3OdeuqlAVRY7TH.png">
 <meta property="article:published_time" content="2021-11-08T06:36:51.000Z">
-<meta property="article:modified_time" content="2021-11-26T03:23:16.484Z">
+<meta property="article:modified_time" content="2021-12-01T03:33:02.321Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/11/26/SLWzg1wb35iJUIP.png">
@@ -197,7 +203,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      2.6k 字
     </span>
   
 
@@ -206,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5 分钟
+      8 分钟
     </span>
   
 
@@ -238,7 +244,8 @@
             <h1 style="display: none">tips</h1>
             
             <div class="markdown-body">
-              <h2 id="zsh终端出现问题"><a href="#zsh终端出现问题" class="headerlink" title="zsh终端出现问题"></a>zsh终端出现问题</h2><p><strong>zsh: corrupt history file /home/xxx/.zsh_history</strong></p>
+              <p>随缘记录一些日常碰到的问题</p>
+<h2 id="zsh终端出现问题"><a href="#zsh终端出现问题" class="headerlink" title="zsh终端出现问题"></a>zsh终端出现问题</h2><p><strong>zsh: corrupt history file /home/xxx/.zsh_history</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">mv ~/.zsh_history ~/.zsh_history_bad<br>strings ~/.zsh_history_bad &gt; ~/.zsh_history<br>fc -R ~.zsh_history<br></code></pre></td></tr></table></figure>
 
 <h2 id="虚拟机挂起后无法联网"><a href="#虚拟机挂起后无法联网" class="headerlink" title="虚拟机挂起后无法联网"></a>虚拟机挂起后无法联网</h2><p><code>sudo service network-manager restart</code></p>
@@ -265,6 +272,31 @@
 
 <p>若还未成功,可用尝试卸载pip3然后重装</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">sudo apt remove python3-pip<br>curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py<br>python3.8 get-pip.py<br></code></pre></td></tr></table></figure>
+
+<h2 id="VMware虚拟机中ubuntu扩容"><a href="#VMware虚拟机中ubuntu扩容" class="headerlink" title="VMware虚拟机中ubuntu扩容"></a>VMware虚拟机中ubuntu扩容</h2><p>在vmware虚拟机中使用Ubuntu，刚开始分配的硬盘空间用长了时间可能不够用了，下面记录如何扩充容量（ubuntu20.04）。</p>
+<p>首先为了预防操作失误可以先做个备份，然后虚拟机关机。</p>
+<p>在虚拟机设置里面点击拓展，然后重新指定磁盘大小</p>
+<p><img src="https://i.loli.net/2021/11/30/lXWjsBZoUkMrVGq.png" srcset="/img/loading.gif" lazyload></p>
+<p>分配好空间后还得进入系统手动进行分区，安装分区软件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">sudo apt-get install gparted<br>sudo gparted<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2021/11/30/hvl1gk6wAJEic3j.png" srcset="/img/loading.gif" lazyload></p>
+<p>先在extended那里点击右键更改大小</p>
+<p><img src="https://i.loli.net/2021/11/30/JZvXoPfYhiVBqTt.png" srcset="/img/loading.gif" lazyload alt="image-20211130155607073"></p>
+<p>然后鼠标把这个往右拉到底</p>
+<p><img src="https://i.loli.net/2021/11/30/5ngTopFCV2A9cNr.png" srcset="/img/loading.gif" lazyload></p>
+<p>接着把sda5那个拉到最右</p>
+<p><img src="https://i.loli.net/2021/11/30/vzKPDFm6LGYh2XZ.png" srcset="/img/loading.gif" lazyload alt="image-20211130155758754"></p>
+<p>最后点击绿色的勾勾</p>
+<p><img src="https://i.loli.net/2021/11/30/i3OdeuqlAVRY7TH.png" srcset="/img/loading.gif" lazyload alt="image-20211130155840897"></p>
+<p>OK</p>
+<h2 id="python开启自带http服务"><a href="#python开启自带http服务" class="headerlink" title="python开启自带http服务"></a>python开启自带http服务</h2><h3 id="python2"><a href="#python2" class="headerlink" title="python2"></a>python2</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">python -m SimpleHTTPServer 8000<br></code></pre></td></tr></table></figure>
+
+<h3 id="python3"><a href="#python3" class="headerlink" title="python3"></a>python3</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">python -m http.server 8000<br></code></pre></td></tr></table></figure>
+
+<h2 id="更换libc"><a href="#更换libc" class="headerlink" title="更换libc"></a>更换libc</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#先进入lib64目录创建一个软连接</span><br>sudo ln -s /path/to/your/ld.so ./ld-xx.so<br><br><span class="hljs-comment">#再进入题目目录</span><br>patchelf --set-interpreter /lib64/ld-xx.so ./bin    <span class="hljs-comment">#bin是二进制文件名   第一个参数是ld.so的目录 bin是二进制文件</span><br><br>patchelf --replace-needed libc.so.6 /home/verf1sh/glibc-all-in-one/libs/2.31-0ubuntu9_amd64/libc-2.31.so ./bin <span class="hljs-comment">#libc.so.6为需要替换的libc路径 第二个参数是需要加载的glibc的目录    bin是二进制文件</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="编译的保护措施"><a href="#编译的保护措施" class="headerlink" title="编译的保护措施"></a>编译的保护措施</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">NX：-z execstack / -z noexecstack (关闭 / 开启)    不让执行栈上的数据，于是JMP ESP就不能用了<br>Canary：-fno-stack-protector /-fstack-protector / -fstack-protector-all (关闭 / 开启 / 全开启)  栈里插入cookie信息<br>PIE：-fpie -no-pie / -pie (关闭 / 开启)   地址随机化，另外打开后会有get_pc_thunk<br>RELRO：-z norelro / -z lazy / -z now (关闭 / 部分开启 / 完全开启)  对GOT表具有写权限<br></code></pre></td></tr></table></figure>
 
 
             </div>

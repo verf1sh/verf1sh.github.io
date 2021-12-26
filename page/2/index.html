@@ -18,7 +18,7 @@
   <meta name="keywords" content="">
   <meta property="og:type" content="website">
 <meta property="og:title" content="verf1sh&#39;blog">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="verf1sh&#39;blog">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="John Doe">
@@ -190,20 +190,22 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/12/26/io-file%E5%B0%8F%E5%8F%99/" target="_self">
-          io_file小叙
+        <a href="/2021/11/08/%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/" target="_self">
+          tips
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/12/26/io-file%E5%B0%8F%E5%8F%99/" target="_self">
+        <a href="/2021/11/08/%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/" target="_self">
           
           
             
           
-          要学习基于IO_FILE的堆利用就得了解它的本质，以下会介绍几个主要的IO函数，结合源码和动态调试去学习。
-IO_FILE之fopen首先是编写一个简单的调用fopen函数的C程序。
- 12345678#include&lt;stdio.h&gt;int main()&#123;    FILE*fp = fopen(&quot;test&quot;,&quot;wb&quot;);    cha
+          随缘记录一些日常碰到的问题
+zsh终端出现问题zsh: corrupt history file /home/xxx/.zsh_history
+123mv ~/.zsh_history ~/.zsh_history_badstrings ~/.zsh_history_bad &gt; ~/.zsh_historyfc -R ~.zsh_history
+
+虚拟机挂起后无法联网sudo service
         </a>
       </p>
 
@@ -211,8 +213,194 @@ IO_FILE之fopen首先是编写一个简单的调用fopen函数的C程序。
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-12-26 18:26" pubdate>
-              2021-12-26
+            <time datetime="2021-11-08 14:36" pubdate>
+              2021-11-08
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/11/04/pwn%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE/" target="_self">
+          pwn虚拟机配置
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/11/04/pwn%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE/" target="_self">
+          
+          
+            
+          
+          最近带着师妹入坑二进制，先教她环境搭建，以下是详细步骤。
+安装虚拟机新手建议以ubuntu 16.04的虚拟机入门，https://mirrors.aliyun.com/oldubuntu-releases/releases/16.04.1/ubuntu-16.04.1-server-amd64.iso
+迅雷没开会员下载速度也还可以。
+
+虚拟机下载完成后就可以安装了，我这里使用的是VMware。V
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-04 19:08" pubdate>
+              2021-11-04
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">环境搭建</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/22/linux_kernel_pwn%E5%88%9D%E6%8E%A2/" target="_self">
+          linux_kernel_pwn初探
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/22/linux_kernel_pwn%E5%88%9D%E6%8E%A2/" target="_self">
+          
+          
+            
+          
+          前置知识一、内核操作系统（Operation System）本质上就是一个管理着计算机硬件和软件资源并为计算机程序提供公共服务的系统软件，其主要功能就是调度系统资源、控制IO设备等等。Linux系统整体结构如下。
+
+内核 （kernel）也是一个程序，用来管理软件发出的数据 I/O 要求，将这些要求转义为指令，交给 CPU 和计算机中的其他组件处理，kernel 是现代操作系统最基本的部分。
+
+k
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-22 12:57" pubdate>
+              2021-10-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/PWN/">PWN</a>
+            
+              <a href="/categories/PWN/kernel/">kernel</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/18/Linux%E5%86%85%E6%A0%B8%E5%88%9D%E6%8E%A2/" target="_self">
+          Linux内核初探
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/18/Linux%E5%86%85%E6%A0%B8%E5%88%9D%E6%8E%A2/" target="_self">
+          
+          
+            
+          
+          可装载内核模块（LKM）Linux内核采用的是宏内核架构，一切的系统服务都需要由内核来提供，新服务的提供往往意味着要重新编译整个内核，于是可装载内核模块的出现大大提高了内核的可拓展性和可维护性。下面是一些基本的概念：
+
+可装载内核模块(LKM)是一段可以动态加载进内核的代码
+
+在Linux内核源码树以外来开发并编译一个模块，称为树外开发
+
+之所以提供模块机制，是因为Linux内核本身是一个单内核，
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-18 19:55" pubdate>
+              2021-10-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/kernel/">kernel</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/15/%E8%83%BD%E6%BA%90%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9Bpwn%E6%96%B9%E5%90%91%E9%A2%98%E8%A7%A3/" target="_self">
+          能源网络安全大赛pwn方向题解
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/15/%E8%83%BD%E6%BA%90%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9Bpwn%E6%96%B9%E5%90%91%E9%A2%98%E8%A7%A3/" target="_self">
+          
+          
+            
+          
+          
+先简单记录一下，明天还有bytectf，有时间了再好好复盘一下，arm pwn都没时间看。
+babyshellcode侥幸一血
+程序分析程序逻辑很简单，考点也清晰，就是orw然后侧信道爆破flag。没见过这种就很难想到，今年的蓝帽杯，强网杯都出过这个考点。有个注意的点就是这个read限制了大小，得绕一下。
+
+利用思路先写一段shellcode，read更多的字节，这样就可以把我们所有orw的sh
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-15 21:27" pubdate>
+              2021-10-15
             </time>
           </div>
         
@@ -228,9 +416,11 @@ IO_FILE之fopen首先是编写一个简单的调用fopen函数的C程序。
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/io-file/">io_file</a>
+              <a href="/tags/orw/">orw</a>
             
-              <a href="/tags/house-of-orange/">house of orange</a>
+              <a href="/tags/Tcache-Stashing-Unlink-Attack/">Tcache Stashing Unlink Attack</a>
+            
+              <a href="/tags/tcache-struct%E5%8A%AB%E6%8C%81/">tcache struct劫持</a>
             
           </div>
         
@@ -244,19 +434,26 @@ IO_FILE之fopen首先是编写一个简单的调用fopen函数的C程序。
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/12/26/%E4%BB%8Ehow2heap%E5%85%A5%E9%97%A8%E5%A0%86/" target="_self">
-          从how2heap入门堆
+        <a href="/2021/10/14/%E5%BC%BA%E7%BD%91%E6%9D%AF%E5%9B%A2%E9%98%9F%E8%B5%9BPWN/" target="_self">
+          广东省强网杯团队赛PWN方向题解
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/12/26/%E4%BB%8Ehow2heap%E5%85%A5%E9%97%A8%E5%A0%86/" target="_self">
+        <a href="/2021/10/14/%E5%BC%BA%E7%BD%91%E6%9D%AF%E5%9B%A2%E9%98%9F%E8%B5%9BPWN/" target="_self">
           
           
             
           
-          how2heap是由shellphish团队制作的堆利用教程，介绍了多种堆利用技术，后续系列实验我们就通过这个教程来学习。
-first_fit123456789101112131415161718192021222324252627282930313233343536#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;stri
+          比赛只出了一道pwn，摸了。题目链接，提取码：hi98
+GirlFriend程序分析ida打开文件后发现函数体内啥也没有。
+
+汇编中有call $+5这样一条指令，类似于重定位，这对我们来说肯定是干扰，我们需要patch修复一下。
+
+修复方法参考如下
+
+就是把call $+5全都改成jmp 【下条指令地址加上其偏移】，修复后就可以看见函数代码了，程序中有很多需要修复的地方，同样的方法改一下就好。
+
         </a>
       </p>
 
@@ -264,8 +461,8 @@ first_fit123456789101112131415161718192021222324252627282930313233343536#include
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-12-26 18:20" pubdate>
-              2021-12-26
+            <time datetime="2021-10-14 14:29" pubdate>
+              2021-10-14
             </time>
           </div>
         
@@ -281,9 +478,7 @@ first_fit123456789101112131415161718192021222324252627282930313233343536#include
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/how2heap/">how2heap</a>
-            
-              <a href="/tags/%E5%A0%86/">堆</a>
+              <a href="/tags/off-by-null/">off by null</a>
             
           </div>
         
@@ -297,20 +492,20 @@ first_fit123456789101112131415161718192021222324252627282930313233343536#include
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/12/26/%E5%A0%86%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" target="_self">
-          堆基础知识
+        <a href="/2021/10/10/hello-world/" target="_self">
+          Hello World
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/12/26/%E5%A0%86%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" target="_self">
+        <a href="/2021/10/10/hello-world/" target="_self">
           
           
             
           
-          堆基础知识堆概述堆（Heap）是虚拟地址空间的一块连续的线性区域，提供动态分配的内存，允许程序申请大小未知的内存，它在用户与操作系统之间，作为动态内存管理的中间人。同时堆响应用户的申请内存请求，向操作系统申请内存，然后将其返回给用户程序，管理用户所释放的内存，并在合适的时候还给操作系统。
-简单来说，堆主要是指用户动态申请的内存（如调用malloc、alloc、alloca、new等函数）。
-目前有
+          时隔一年多又把博客整起来了，算是新的开始吧，希望能养成写博客记录的习惯，给自己加个油！
+博客主要记录CTF-Pwn的一些题解和二进制安全的学习点滴
+
         </a>
       </p>
 
@@ -318,356 +513,8 @@ first_fit123456789101112131415161718192021222324252627282930313233343536#include
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-12-26 18:17" pubdate>
-              2021-12-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/PWN/">PWN</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%A0%86/">堆</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/12/26/io_file/" target="_self">
-          
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/12/26/io_file/" target="_self">
-          
-          
-            
-          
-          要学习基于IO_FILE的堆利用就得了解它的本质，以下会介绍几个主要的IO函数，结合源码和动态调试去学习。
-IO_FILE之fopen首先是编写一个简单的调用fopen函数的C程序。
- 12345678#include&lt;stdio.h&gt;int main()&#123;    FILE*fp = fopen(&quot;test&quot;,&quot;wb&quot;);    cha
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-12-26 17:15" pubdate>
-              2021-12-26
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/12/01/AFL%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/" target="_self">
-          AFL源码阅读
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/12/01/AFL%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/" target="_self">
-          
-          
-            
-          
-          之前看AFL源码一直断断续续，看了一半就没看了。听了Sakura师傅的课，决定要把源码过一遍，把整个流程调试一遍。
-afl-gcc在有源码的情况下，会使用afl-gcc来编译程序，先来看看afl-gcc部分。
-main函数如下，代码不是很长。
-12345678910111213141516171819202122232425262728293031323334353637int main(int 
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-12-01 09:42" pubdate>
-              2021-12-01
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/fuzzing/">fuzzing</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/AFL/">AFL</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/11/30/hypervisor%20fuzzer%E5%AD%A6%E4%B9%A0/" target="_self">
-          hypervisor fuzzer学习
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/11/30/hypervisor%20fuzzer%E5%AD%A6%E4%B9%A0/" target="_self">
-          
-          
-            
-          
-          虚拟化方案有：**软件虚拟化、半虚拟化、硬件虚拟化**
-软件虚拟化是指将虚拟机的指令流交给虚拟机核心层进行分析，将非特权指令直接交给CPU运行，特权指令交给虚拟机核心层执行。
-半虚拟化是改造GuestOS(虚拟机内的系统)，使让GuestOS知道他在虚拟机环境中，使其只使用非特权指令（准确说是避免使用具有虚拟化缺陷的特权指令），需要用到特权操作时使用hypercall的方式请求虚拟机核心层代为完成
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-11-30 10:47" pubdate>
-              2021-11-30
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Fuzzing/">Fuzzing</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/hypervisor/">hypervisor</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/11/29/fuzz%E9%9A%8F%E7%BC%98%E8%AE%B0%E5%BD%95/" target="_self">
-          fuzz随缘记录
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/11/29/fuzz%E9%9A%8F%E7%BC%98%E8%AE%B0%E5%BD%95/" target="_self">
-          
-          
-            
-          
-          内存插桩AFL的代码插桩比较好理解，就是将源文件编译成汇编代码后，寻找合法的有效待插桩段，其实也就是代码段，然后检测jz，ja，jne等等之类的跳转指令，然后再将跳转指令之后插入trampoline_fmt_32/64桩代码，主要是为了记录代码执行路径并计算出覆盖率信息。
-那么内存插桩嘞，细微的内存越界读写不一定会导致程序崩溃，但它也算是个漏洞，而AFL只会记录让程序崩溃的输入。ASAN是谷歌的一
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-11-29 20:35" pubdate>
-              2021-11-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/fuzz/">fuzz</a>
-            
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/11/26/ciscn-2017-babydriver%E7%9A%84%E5%87%A0%E7%A7%8D%E8%A7%A3%E6%B3%95/" target="_self">
-          ciscn_2017_babydriver的几种解法
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/11/26/ciscn-2017-babydriver%E7%9A%84%E5%87%A0%E7%A7%8D%E8%A7%A3%E6%B3%95/" target="_self">
-          
-          
-            
-          
-          开始之前最近在屁颠屁颠的学kernel pwn，跟着一些视频、博客搭建环境，学习调试内核。但感觉内核态的漏洞涉及了很多知识点，只能遇到啥去学啥了。
-因此为了巩固每次新学习的知识点，我打算整理好记下来，同时录个视频加强自己的思维理解，当然如果能帮助到其他正在学习的小伙伴那就更好了。
-驱动分析ida打开驱动一看，有如下几个功能函数，其中babydriver_init和babydriver_exit函数
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-11-26 13:52" pubdate>
-              2021-11-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/PWN/">PWN</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/kernel-pwn/">kernel pwn</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/11/23/AFL-%E6%8C%96%E6%8E%98ImageMagick/" target="_self">
-          AFL++ 挖掘ImageMagick
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/11/23/AFL-%E6%8C%96%E6%8E%98ImageMagick/" target="_self">
-          
-          
-            
-          
-          安装AFL++方便起见，直接用官方提供的docker镜像，两条命令即可，docker使用的是ubuntu20的版本
-12docker pull aflplusplus/aflplusplusdocker run -ti -v /location/of/your/target:/src aflplusplus/aflplusplus
-
-我这里使用的是：
-1docker run -ti --privi
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-11-23 13:08" pubdate>
-              2021-11-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Fuzzing/">Fuzzing</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/fuzz/">fuzz</a>
-            
-              <a href="/tags/AFL/">AFL++</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/11/21/C++%20PWN/" target="_self">
-          C++ PWN
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/11/21/C++%20PWN/" target="_self">
-          
-          
-            
-          
-          最近看了几道C++的pwn题，头都大了，太难逆向了，所以想学习一下C++的一些知识。
-C++基础知识从C到C++封装、继承、多态是C++耳熟能详的几个特点。
-C++的封装可以理解成C语言中把函数定义在结构体内部。如下面的代码，在C语言中Test是个结构体类型，在C++中就叫成Test类了，test就叫做对象，定义在这个结构体里面的都叫做成员，写在结构体里面的函数就叫做成员函数
-1234567891
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-11-21 19:55" pubdate>
-              2021-11-21
+            <time datetime="2021-10-10 16:48" pubdate>
+              2021-10-10
             </time>
           </div>
         
@@ -681,7 +528,7 @@ C++的封装可以理解成C语言中把函数定义在结构体内部。如下�
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
     </span>
   </nav>
 
