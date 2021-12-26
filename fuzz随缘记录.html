@@ -16,18 +16,37 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签 - hypervisor">
-<meta property="og:url" content="http://example.com/tags/hypervisor/index.html">
+  <meta name="description" content="内存插桩AFL的代码插桩比较好理解，就是将源文件编译成汇编代码后，寻找合法的有效待插桩段，其实也就是代码段，然后检测jz，ja，jne等等之类的跳转指令，然后再将跳转指令之后插入trampoline_fmt_32&#x2F;64桩代码，主要是为了记录代码执行路径并计算出覆盖率信息。 那么内存插桩嘞，细微的内存越界读写不一定会导致程序崩溃，但它也算是个漏洞，而AFL只会记录让程序崩溃的输入。ASAN是谷歌的一">
+<meta property="og:type" content="website">
+<meta property="og:title" content="fuzz随缘记录">
+<meta property="og:url" content="http://example.com/fuzz%E9%9A%8F%E7%BC%98%E8%AE%B0%E5%BD%95.html">
 <meta property="og:site_name" content="verf1sh&#39;blog">
+<meta property="og:description" content="内存插桩AFL的代码插桩比较好理解，就是将源文件编译成汇编代码后，寻找合法的有效待插桩段，其实也就是代码段，然后检测jz，ja，jne等等之类的跳转指令，然后再将跳转指令之后插入trampoline_fmt_32&#x2F;64桩代码，主要是为了记录代码执行路径并计算出覆盖率信息。 那么内存插桩嘞，细微的内存越界读写不一定会导致程序崩溃，但它也算是个漏洞，而AFL只会记录让程序崩溃的输入。ASAN是谷歌的一">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-29T12:35:48.000Z">
+<meta property="article:modified_time" content="2021-11-29T12:55:40.398Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
-  <title>标签 - hypervisor - verf1sh&#39;blog</title>
+  <title>fuzz随缘记录 - verf1sh&#39;blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -54,7 +73,7 @@
 
 
 <body>
-  <header style="height: 80vh;">
+  <header style="height: 60vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -155,17 +174,13 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="标签 - hypervisor">
+            <span class="h2" id="subtitle" title="fuzz随缘记录">
               
             </span>
 
             
           </div>
 
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
           
         </div>
       </div>
@@ -183,25 +198,14 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
+<article class="page-content">
+  <h2 id="内存插桩"><a href="#内存插桩" class="headerlink" title="内存插桩"></a>内存插桩</h2><p>AFL的代码插桩比较好理解，就是将源文件编译成汇编代码后，寻找合法的有效待插桩段，其实也就是代码段，然后检测<code>jz</code>，<code>ja</code>，<code>jne</code>等等之类的跳转指令，然后再将跳转指令之后插入<code>trampoline_fmt_32/64</code>桩代码，主要是为了记录代码执行路径并计算出覆盖率信息。</p>
+<p>那么内存插桩嘞，细微的内存越界读写不一定会导致程序崩溃，但它也算是个漏洞，而AFL只会记录让程序崩溃的输入。ASAN是谷歌的一个开源工具，用于检测内存错误。</p>
+<p>宏观上来讲，ASAN的检测原理也不难</p>
+
+
   
-  
-    
-      
-      <p class="h5">2021</p>
-    
-    <a href="/2021/11/30/hypervisor%20fuzzer%E5%AD%A6%E4%B9%A0/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">hypervisor fuzzer学习</span>
-      <time style="float: right;">11-30</time>
-    </a>
-  
-</div>
-
-
-
-
+</article>
 
               </div>
             </div>
@@ -290,6 +294,19 @@
   
 
 
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
 
 
 

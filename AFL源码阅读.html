@@ -16,18 +16,38 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="分类 - fuzz">
-<meta property="og:url" content="http://example.com/categories/fuzz/index.html">
+  <meta name="description" content="之前看AFL源码一直断断续续，看了一半就没看了。听了Sakura师傅的课，决定要把源码过一遍，把整个流程调试一遍。 afl-gcc在有源码的情况下，会使用afl-gcc来编译程序，先来看看afl-gcc部分。 main函数如下，代码不是很长。 12345678910111213141516171819202122232425262728293031323334353637int main(int">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AFL源码阅读">
+<meta property="og:url" content="http://example.com/AFL%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB.html">
 <meta property="og:site_name" content="verf1sh&#39;blog">
+<meta property="og:description" content="之前看AFL源码一直断断续续，看了一半就没看了。听了Sakura师傅的课，决定要把源码过一遍，把整个流程调试一遍。 afl-gcc在有源码的情况下，会使用afl-gcc来编译程序，先来看看afl-gcc部分。 main函数如下，代码不是很长。 12345678910111213141516171819202122232425262728293031323334353637int main(int">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-01T01:42:26.000Z">
+<meta property="article:modified_time" content="2021-12-01T01:56:25.895Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="AFL">
 <meta name="twitter:card" content="summary_large_image">
   
-  <title>分类 - fuzz - verf1sh&#39;blog</title>
+  <title>AFL源码阅读 - verf1sh&#39;blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -155,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="分类 - fuzz">
+            <span class="h2" id="subtitle" title="AFL源码阅读">
               
             </span>
 
@@ -179,25 +199,17 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
+<article class="page-content">
+  <p>之前看AFL源码一直断断续续，看了一半就没看了。听了Sakura师傅的课，决定要把源码过一遍，把整个流程调试一遍。</p>
+<h2 id="afl-gcc"><a href="#afl-gcc" class="headerlink" title="afl-gcc"></a>afl-gcc</h2><p>在有源码的情况下，会使用afl-gcc来编译程序，先来看看afl-gcc部分。</p>
+<p>main函数如下，代码不是很长。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span>** argv)</span> </span>&#123;<br><br>  <span class="hljs-keyword">if</span> (isatty(<span class="hljs-number">2</span>) &amp;&amp; !getenv(<span class="hljs-string">&quot;AFL_QUIET&quot;</span>)) &#123;<br><br>    SAYF(cCYA <span class="hljs-string">&quot;afl-cc &quot;</span> cBRI VERSION cRST <span class="hljs-string">&quot; by &lt;lcamtuf@google.com&gt;\n&quot;</span>);<br><br>  &#125; <span class="hljs-keyword">else</span> be_quiet = <span class="hljs-number">1</span>;<br><br>  <span class="hljs-keyword">if</span> (argc &lt; <span class="hljs-number">2</span>) &#123;<br><br>    SAYF(<span class="hljs-string">&quot;\n&quot;</span><br>         <span class="hljs-string">&quot;This is a helper application for afl-fuzz. It serves as a drop-in replacement\n&quot;</span><br>         <span class="hljs-string">&quot;for gcc or clang, letting you recompile third-party code with the required\n&quot;</span><br>         <span class="hljs-string">&quot;runtime instrumentation. A common use pattern would be one of the following:\n\n&quot;</span><br><br>         <span class="hljs-string">&quot;  CC=%s/afl-gcc ./configure\n&quot;</span><br>         <span class="hljs-string">&quot;  CXX=%s/afl-g++ ./configure\n\n&quot;</span><br><br>         <span class="hljs-string">&quot;You can specify custom next-stage toolchain via AFL_CC, AFL_CXX, and AFL_AS.\n&quot;</span><br>         <span class="hljs-string">&quot;Setting AFL_HARDEN enables hardening optimizations in the compiled code.\n\n&quot;</span>,<br>         BIN_PATH, BIN_PATH);<br><br>    <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br><br>  &#125;<br><br>  find_as(argv[<span class="hljs-number">0</span>]);<br><br>  edit_params(argc, argv);<br><br>  execvp(cc_params[<span class="hljs-number">0</span>], (<span class="hljs-keyword">char</span>**)cc_params);<br><br>  FATAL(<span class="hljs-string">&quot;Oops, failed to execute &#x27;%s&#x27; - check your PATH&quot;</span>, cc_params[<span class="hljs-number">0</span>]);<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="isatty"><a href="#isatty" class="headerlink" title="isatty"></a>isatty</h3><p><code>isatty</code>函数在<code>unistd.h</code>头文件中</p>
+
+
   
-  
-    
-      
-      <p class="h5">2021</p>
-    
-    <a href="/2021/11/29/fuzz%E9%9A%8F%E7%BC%98%E8%AE%B0%E5%BD%95/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">fuzz随缘记录</span>
-      <time style="float: right;">11-29</time>
-    </a>
-  
-</div>
-
-
-
-
+</article>
 
               </div>
             </div>
@@ -286,6 +298,19 @@
   
 
 
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
 
 
 

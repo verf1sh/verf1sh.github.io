@@ -17,9 +17,9 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   <meta name="description" content="虚拟化方案有：**软件虚拟化、半虚拟化、硬件虚拟化** 软件虚拟化是指将虚拟机的指令流交给虚拟机核心层进行分析，将非特权指令直接交给CPU运行，特权指令交给虚拟机核心层执行。 半虚拟化是改造GuestOS(虚拟机内的系统)，使让GuestOS知道他在虚拟机环境中，使其只使用非特权指令（准确说是避免使用具有虚拟化缺陷的特权指令），需要用到特权操作时使用hypercall的方式请求虚拟机核心层代为完成">
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:title" content="hypervisor fuzzer学习">
-<meta property="og:url" content="http://example.com/2021/11/30/hypervisor%20fuzzer%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:url" content="http://example.com/hypervisor%20fuzzer%E5%AD%A6%E4%B9%A0.html">
 <meta property="og:site_name" content="verf1sh&#39;blog">
 <meta property="og:description" content="虚拟化方案有：**软件虚拟化、半虚拟化、硬件虚拟化** 软件虚拟化是指将虚拟机的指令流交给虚拟机核心层进行分析，将非特权指令直接交给CPU运行，特权指令交给虚拟机核心层执行。 半虚拟化是改造GuestOS(虚拟机内的系统)，使让GuestOS知道他在虚拟机环境中，使其只使用非特权指令（准确说是避免使用具有虚拟化缺陷的特权指令），需要用到特权操作时使用hypercall的方式请求虚拟机核心层代为完成">
 <meta property="og:locale" content="zh_CN">
@@ -74,7 +74,7 @@
 
 
 <body>
-  <header style="height: 70vh;">
+  <header style="height: 60vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -180,40 +180,6 @@
             </span>
 
             
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-11-30 10:47" pubdate>
-        2021年11月30日 上午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      4.3k 字
-    </span>
-  
-
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      14 分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
           </div>
 
           
@@ -224,20 +190,17 @@
 
   <main>
     
-      
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
 
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">hypervisor fuzzer学习</h1>
-            
-            <div class="markdown-body">
-              <p>虚拟化方案有：**<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E8%BD%AF%E4%BB%B6%E8%99%9A%E6%8B%9F%E5%8C%96&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:719176452%7D">软件虚拟化</a><strong>、</strong>半虚拟化<strong>、</strong>硬件虚拟化**</p>
+<article class="page-content">
+  <p>虚拟化方案有：**<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E8%BD%AF%E4%BB%B6%E8%99%9A%E6%8B%9F%E5%8C%96&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:719176452%7D">软件虚拟化</a><strong>、</strong>半虚拟化<strong>、</strong>硬件虚拟化**</p>
 <p><strong>软件虚拟化</strong>是指将虚拟机的指令流交给虚拟机核心层进行分析，将非特权指令直接交给CPU运行，特权指令交给虚拟机核心层执行。</p>
 <p><strong>半虚拟化</strong>是改造GuestOS(虚拟机内的系统)，使让GuestOS知道他在虚拟机环境中，使其只使用非特权指令（准确说是避免使用具有虚拟化缺陷的特权指令），需要用到特权操作时使用hypercall的方式请求虚拟机核心层代为完成。</p>
 <p><strong>硬件虚拟化</strong>是芯片级别的虚拟化支持，克服x86虚拟化缺陷问题，无需改造GuestOS：将虚拟机运行在Ring1模式下，所有指令交给硬件执行。对于<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E7%89%B9%E6%9D%83%E6%8C%87%E4%BB%A4CP&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:719176452%7D">特权指令CP</a>U不会直接执行，将其捕获交给虚拟机核心层进行处理。</p>
@@ -264,80 +227,15 @@
 <p>认识到这一局限性，最新的hypervisor fuzzer Nyx [42] (Hyper-Cube的后续产品)利用通过Intel-PT收集的覆盖信息增强了非引导的Hyper-Cube。然而，Nyx的覆盖导向特性本身并不能解决fuzz复杂hypervisors时遇到的问题。因此，Nyx提出了一个框架，用于开发精确的用户提供的规范来fuzz复杂的设备。虽然这允许Nyx提高虚拟设备(如USB控制器和VIRTIO块设备)的覆盖范围，但它本质上把Nyx的核心方面变成了一个基于语法的fuzzer，并具有它所有的优点和缺点。也就是说，如果有语法，fuzzer可以发现虚拟设备的“深度”行为。然而，创建语法需要专业知识，这是一个费力且容易出错的过程。此外，fuzzer失去了识别存在于语法范围之外的bug的能力。更糟糕的是，语法是基于抽象规范开发的。然而，实际的设备代码有足够的余地来实现上述规范。因此，蒸馏文法和实际实现之间的断开是很有可能的，这可能会将危险的bug放置在fuzzer无法触及的地方。考虑到这个规范需要一个定制的变异引擎，并且需要花费数天的时间为单个设备创建，这种方法面临可拓展性问题。在这篇文章被接受的时候，Hyper-Cube/Nyx的源代码还没有发布，然而，在我们自己的分析中，我们发现DMA活动不利于基于启发式的模糊器，比如Hyper-Cube，它依赖于单个的临时缓冲区。此外，我们在所有Nyx有语法规范的设备中发现了新的bug，进一步说明了编写准确和完整的规范的困难。</p>
 <p>我们发现虚拟设备fuzzer面临的核心挑战是虚拟设备严重依赖语义依赖，这不利于现成的基于引导的fuzzer。这些依赖关系存在于写入PIO/MMIO地址的数据和DMA缓冲区的位置之间，但更重要的是DMA缓冲区本身的结构(例如，缓冲区可以包含指向更多缓冲区、队列、环等的指针)。为了满足虚拟设备实现所需的语义约束，我们利用了hypervisor设计的洞察力。具体来说，我们观察到现代虚拟化策略要求hypervisor实现调节PIO、MMIO和dma活动的功能。结合hypervisor肯定知道它所有虚拟设备的输入空间这一事实，我们设计了一种称为MORPHUZZ的方法，它利用这些信息来满足设备I/O随需应变产生的任何语义约束。除了透明地实现语义约束，这种随需应变的方法允许MORPHUZZ利用经过打磨的现有模糊器(例如libFuzzer)来到达虚拟设备的深处。重要的是，MORPHUZZ不需要语法规范和种子跟踪了。根据hypervisor提供的洞察力，MORPHUZZ动态地重塑(即弯曲)输入空间，以符合当前可访问的PIO、MMIO和(最重要的是)DMA区域的严格边界。</p>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Fuzzing/">Fuzzing</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/hypervisor/">hypervisor</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
-              
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2021/12/01/AFL%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">AFL源码阅读</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2021/11/29/fuzz%E9%9A%8F%E7%BC%98%E8%AE%B0%E5%BD%95/">
-                        <span class="hidden-mobile">fuzz随缘记录</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
 
-            
-          </article>
+  
+</article>
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
     
 
     
