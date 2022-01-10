@@ -111,7 +111,7 @@
 <meta property="og:image" content="https://s2.loli.net/2021/12/26/H9ju6V8PoMCXhGO.png">
 <meta property="og:image" content="https://s2.loli.net/2021/12/26/Hj3nSoEiYXfrMgw.png">
 <meta property="article:published_time" content="2021-12-26T10:20:16.000Z">
-<meta property="article:modified_time" content="2021-12-26T10:26:08.939Z">
+<meta property="article:modified_time" content="2022-01-10T13:39:48.095Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="how2heap">
 <meta property="article:tag" content="堆">
@@ -430,9 +430,9 @@
 <p> <img src="https://s2.loli.net/2021/12/26/yVOo9LlKQU3zZjX.png" srcset="/img/loading.gif" lazyload></p>
 <p>​    可以看到，我们在chunk0里构造一个fake chunk，用P表示，两个指针fd 和bk可以构成两条链：P-&gt;fd-&gt;bk == P，P-&gt;bk-&gt;fd == P，可以绕过检查。另外利用chunk0的溢出漏洞，通过修改chunk 1的 prev_size为fake chunk的大小，修改 PREV_INUSE标志位为0，将fake chunk伪造成一个free chunk。</p>
 <p> <img src="https://s2.loli.net/2021/12/26/Sbfe9uoiYKvVp3P.png" srcset="/img/loading.gif" lazyload></p>
-<p>​    我们的fake chunk的fd指向0x602058，然后0x602058的bk指向0x602070。fake chunk的bk指向0x602060，然后0x602060的fd指向 0x602070，可以保证前后都指向我们伪造的这个 chunk，完美！</p>
+<p>​    我们的fake chunk的fd指向0x602058，然后0x602058的bk指向0x603010。fake chunk的bk指向0x602060，然后0x602060的fd指向 0x603010，可以保证前后都指向我们伪造的这个 chunk，完美！</p>
 <p>​    接下来释放掉chunk1，因为fake chunk和chunk1是相邻的一个free chunk，所以会将他两个合并，这就需要对fake chunk进行unlink，进行如下操作：</p>
- <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">FD = P-&gt;fdBK = P-&gt;bkFD-&gt;bk = BKBK-&gt;fd = FD<br></code></pre></td></tr></table></figure>
+ <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c">FD = P-&gt;fd <br>BK = P-&gt;bk<br>FD-&gt;bk = BK <br>   BK-&gt;fd = FD<br></code></pre></td></tr></table></figure>
 
 <p>​    根据 fd 和 bk 指针在 malloc_chunk 结构体中的位置，这段代码等价于：</p>
  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">FD = P-&gt;fd = &amp;P - <span class="hljs-number">24B</span>K = P-&gt;bk = &amp;P - <span class="hljs-number">16F</span>D-&gt;bk = *(&amp;P - <span class="hljs-number">24</span> + <span class="hljs-number">24</span>) = PFD-&gt;fd = *(&amp;P - <span class="hljs-number">16</span> + <span class="hljs-number">16</span>) = P<br></code></pre></td></tr></table></figure>
