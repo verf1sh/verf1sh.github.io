@@ -30,8 +30,10 @@
 <meta property="og:image" content="https://i.loli.net/2021/11/30/5ngTopFCV2A9cNr.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/30/vzKPDFm6LGYh2XZ.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/30/i3OdeuqlAVRY7TH.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/13/6FCPRASTJeHxtju.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/13/NvmqbnoVxaAOJUB.png">
 <meta property="article:published_time" content="2021-11-08T06:36:51.000Z">
-<meta property="article:modified_time" content="2022-02-19T13:18:01.604Z">
+<meta property="article:modified_time" content="2022-03-15T12:29:46.314Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/11/26/SLWzg1wb35iJUIP.png">
@@ -203,7 +205,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.6k 字
+      3.4k 字
     </span>
   
 
@@ -212,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      8 分钟
+      11 分钟
     </span>
   
 
@@ -303,6 +305,28 @@
 
 <p>隐藏光标：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">echo -e &quot;\033[?25l&quot;<br></code></pre></td></tr></table></figure>
+
+<h2 id="vim设置tab键为4个空格"><a href="#vim设置tab键为4个空格" class="headerlink" title="vim设置tab键为4个空格"></a>vim设置tab键为4个空格</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/vimrc<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">set</span> ts=4<br><span class="hljs-built_in">set</span> expandtab<br><span class="hljs-built_in">set</span> autoindent<br></code></pre></td></tr></table></figure>
+
+<h2 id="sublime破解"><a href="#sublime破解" class="headerlink" title="sublime破解"></a>sublime破解</h2><p>1、打开浏览器进入网站<a target="_blank" rel="noopener" href="https://hexed.it/">https://hexed.it</a><br>2、打开<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=sublime&spm=1001.2101.3001.7020">sublime</a> text4安装目录选择文件sublime_text.exe<br>3、搜索80 78 05 00 0f 94 c1更改为c6 40 05 01 48 85 c9(第一个匹配到的)<br>4、保存文件命名为sublime_text.exe并替换原文件</p>
+<h2 id="查看mysql语句执行记录"><a href="#查看mysql语句执行记录" class="headerlink" title="查看mysql语句执行记录"></a>查看mysql语句执行记录</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 查看当前配置</span><br><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%log_output%&#x27;</span>;<br><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%general_log%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2022/03/13/6FCPRASTJeHxtju.png" srcset="/img/loading.gif" lazyload alt="image-20220313152709855"></p>
+<p><img src="https://s2.loli.net/2022/03/13/NvmqbnoVxaAOJUB.png" srcset="/img/loading.gif" lazyload alt="image-20220313152853172"></p>
+<p>ON状态表示开启日志模式，日志输出到下面的文件，若为OFF，使用下面命令开启</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SET</span> <span class="hljs-keyword">GLOBAL</span> log_output <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;FILE&#x27;</span>;  <span class="hljs-keyword">SET</span> <span class="hljs-keyword">GLOBAL</span> general_log <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;ON&#x27;</span>; <br></code></pre></td></tr></table></figure>
+
+<h2 id="软链接修改"><a href="#软链接修改" class="headerlink" title="软链接修改"></a>软链接修改</h2><p>例如替换python的软链接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">rm -rf /usr/bin/python<br>ln -s /usr/bin/python3 /usr/bin/python<br></code></pre></td></tr></table></figure>
+
+<h2 id="ubuntu终端自动补全忽略大小写"><a href="#ubuntu终端自动补全忽略大小写" class="headerlink" title="ubuntu终端自动补全忽略大小写"></a>ubuntu终端自动补全忽略大小写</h2><p>Ubuntu自带的bash是大小写敏感的，不好用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim ~/.inputrc<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">set</span> match-hidden-files off<br><br><span class="hljs-built_in">set</span> show-all-if-ambiguous on<br><span class="hljs-built_in">set</span> completion-ignore-case on<br><br><span class="hljs-string">&quot;\e[A&quot;</span>: history-search-backward<br><span class="hljs-string">&quot;\e[B&quot;</span>: history-search-forward<br></code></pre></td></tr></table></figure>
+
+<h2 id="scp拷贝"><a href="#scp拷贝" class="headerlink" title="scp拷贝"></a>scp拷贝</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> s拷贝本地文件到远程服务器</span><br>scp a.txt xxx@192.168.1.1:/home/xxx<br></code></pre></td></tr></table></figure>
 
 
             </div>
