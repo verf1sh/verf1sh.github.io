@@ -16,18 +16,37 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="http://example.com/archives/2022/index.html">
+  <meta name="description" content="规避ASAN的memory leaks在afl+asan fuzz某些程序的时候，编译时或fuzz时偶尔会出现memory leak的情况，配置以下环境变量即可 1export ASAN_OPTIONS&#x3D;detect_leaks&#x3D;0  &#x2F;usr&#x2F;bin&#x2F;ld: ..&#x2F;..&#x2F;src&#x2F;common&#x2F;port&#x2F;libpgport_srv.a(gs_thread_srv.o): TLS transitio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AFL Tips">
+<meta property="og:url" content="http://example.com/2022/04/25/AFL-Tips/index.html">
 <meta property="og:site_name" content="verf1sh&#39;blog">
+<meta property="og:description" content="规避ASAN的memory leaks在afl+asan fuzz某些程序的时候，编译时或fuzz时偶尔会出现memory leak的情况，配置以下环境变量即可 1export ASAN_OPTIONS&#x3D;detect_leaks&#x3D;0  &#x2F;usr&#x2F;bin&#x2F;ld: ..&#x2F;..&#x2F;src&#x2F;common&#x2F;port&#x2F;libpgport_srv.a(gs_thread_srv.o): TLS transitio">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-25T12:16:45.000Z">
+<meta property="article:modified_time" content="2022-04-29T11:39:06.180Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
-  <title>归档 - verf1sh&#39;blog</title>
+  <title>AFL Tips - verf1sh&#39;blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -54,7 +73,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -155,9 +174,43 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="AFL Tips">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-04-25 20:16" pubdate>
+        2022年4月25日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      542 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      2 分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -170,58 +223,86 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 17 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2022</p>
-    
-    <a href="/2022/05/25/%E7%AC%AC%E4%BA%8C%E5%B1%8A%E5%B9%BF%E4%B8%9C%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9B/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">第二届广东大学生网络安全大赛</span>
-      <time style="float: right;">05-25</time>
-    </a>
-  
-    
-    <a href="/2022/04/25/AFL-Tips/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">AFL Tips</span>
-      <time style="float: right;">04-25</time>
-    </a>
-  
-    
-    <a href="/2022/03/07/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8%E6%B1%82%E8%81%8C/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">二进制安全求职</span>
-      <time style="float: right;">03-07</time>
-    </a>
-  
-    
-    <a href="/2022/01/26/hws%202022%20wp/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">hws_2022_wp</span>
-      <time style="float: right;">01-26</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">AFL Tips</h1>
+            
+            <div class="markdown-body">
+              <h2 id="规避ASAN的memory-leaks"><a href="#规避ASAN的memory-leaks" class="headerlink" title="规避ASAN的memory leaks"></a>规避ASAN的memory leaks</h2><p>在afl+asan fuzz某些程序的时候，编译时或fuzz时偶尔会出现memory leak的情况，配置以下环境变量即可</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">ASAN_OPTIONS</span>=detect_leaks=0<br></code></pre></td></tr></table></figure>
 
+<p>/usr/bin/ld: ../../src/common/port/libpgport_srv.a(gs_thread_srv.o): TLS transition from R_X86_64_TLSGD to R_X86_64_GOTTPOFF against <code>assert_enabled&#39; at 0x357b in section </code>.text’ failed</p>
+<p>/usr/bin/ld: ../../src/common/port/libpgport_srv.a(gs_thread_srv.o): TLS transition from R_X86_64_TLSGD to R_X86_64_GOTTPOFF against <code>assert_enabled&#39; at 0x357b in section </code>.text’ failed</p>
+<p>export ASAN_OPTIONS=”detect_leaks=0:abort_on_error=1:symbolize=0:exit_code=:symbolize=0”</p>
 
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/05/25/%E7%AC%AC%E4%BA%8C%E5%B1%8A%E5%B9%BF%E4%B8%9C%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">第二届广东大学生网络安全大赛</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/07/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8%E6%B1%82%E8%81%8C/">
+                        <span class="hidden-mobile">二进制安全求职</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -304,6 +385,19 @@
   
 
 
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
 
 
 
