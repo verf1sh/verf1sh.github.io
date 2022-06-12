@@ -242,9 +242,7 @@ jmp_rsp签到题，直接找到jmp rsp的gadget地址，然后写shellcode即可
             
           
           规避ASAN的memory leaks在afl+asan fuzz某些程序的时候，编译时或fuzz时偶尔会出现memory leak的情况，配置以下环境变量即可
-1export ASAN_OPTIONS=detect_leaks=0
-
-/usr/bin/ld: ../../src/common/port/libpgport_srv.a(gs_thread_srv.o): TLS transitio
+12export ASAN_OPTIONS=detect_leaks=0export ASAN_OPTIONS=&quot;detect_leaks=0:abort_on_error=1:symbolize=0:exit_code=:sy
         </a>
       </p>
 
