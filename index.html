@@ -190,6 +190,43 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/08/10/ebpf%E5%85%A5%E9%97%A8-cve-2017-16995%E5%A4%8D%E7%8E%B0/" target="_self">
+          ebpf入门&amp;cve-2017-16995复现
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/08/10/ebpf%E5%85%A5%E9%97%A8-cve-2017-16995%E5%A4%8D%E7%8E%B0/" target="_self">
+          
+          
+            
+          
+          前言CVE-2017-16995是一个ebpf模块相关的内核提权漏洞，漏洞存在于内核版本小于4.13.9的系统中，漏洞成因为kernel/bpf/verifier.c文件中的check_alu_op函数的检查问题，这个漏洞可以允许一个普通用户向系统发起拒绝服务攻击(内存破坏)或者提升到特权用户。
+前置知识eBPF简介众所周知，linux的用户层和内核层是隔离的，想让内核执行用户的代码，正常是需要编
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-08-10 21:15" pubdate>
+              2022-08-10
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2022/08/01/%E8%99%8E%E7%AC%A6%E3%80%81DSCTF%E3%80%81%E5%BC%BA%E7%BD%91%E7%9A%84%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95/" target="_self">
           虎符、DSCTF、强网的简单记录
         </a>
@@ -590,63 +627,11 @@ first_fit123456789101112131415161718192021222324252627282930313233343536#include
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/12/26/%E5%A0%86%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" target="_self">
-          堆基础知识
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/12/26/%E5%A0%86%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" target="_self">
-          
-          
-            
-          
-          堆基础知识堆概述堆（Heap）是虚拟地址空间的一块连续的线性区域，提供动态分配的内存，允许程序申请大小未知的内存，它在用户与操作系统之间，作为动态内存管理的中间人。同时堆响应用户的申请内存请求，向操作系统申请内存，然后将其返回给用户程序，管理用户所释放的内存，并在合适的时候还给操作系统。
-简单来说，堆主要是指用户动态申请的内存（如调用malloc、alloc、alloca、new等函数）。
-目前有
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-12-26 18:17" pubdate>
-              2021-12-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/PWN/">PWN</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%A0%86/">堆</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
